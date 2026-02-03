@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Basketball Pro – Perfect Timing. Pure Swish.</title>
+  <meta name="description" content="Basketball Pro ist ein schnelles Arcade-Basketballspiel: Timing treffen, Würfe versenken, Highscore jagen. Jetzt downloaden!" />
+  <meta name="theme-color" content="#0b1020" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Basketball Pro – Perfect Timing. Pure Swish." />
+  <meta property="og:description" content="Skillbasiertes One-Tap Basketball. Dynamische Wurflinie, saftiges Feedback, Highscore." />
+  <meta property="og:type" content="website" />
+
+  <style>
+    :root{
+      --bg:#070a14;
+      --bg2:#0b1020;
+      --card:#0f1630cc;
+      --stroke:#ffffff12;
+      --text:#e8ecff;
+      --muted:#aab3dd;
+      --muted2:#7f89bf;
+      --brand:#5ee7ff;
+      --brand2:#8b5cff;
+      --good:#ffd84d;
+      --perfect:#4dff7a;
+      --miss:#ff4d6d;
+      --shadow: 0 18px 45px rgba(0,0,0,.45);
+      --radius: 20px;
+      --radius2: 28px;
+      --max: 1120px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 15% 10%, rgba(94,231,255,.22), transparent 60%),
+        radial-gradient(900px 500px at 80% 20%, rgba(139,92,255,.18), transparent 55%),
+        radial-gradient(700px 500px at 50% 90%, rgba(255,216,77,.10), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+    }
+    a{color:inherit; text-decoration:none}
+    img{max-width:100%; display:block}
+    .container{width: min(var(--max), calc(100% - 48px)); margin: 0 auto;}
+    .pill{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:8px 12px;
+      border:1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border-radius:999px;
+      color:var(--muted);
+      backdrop-filter: blur(10px);
+    }
+    .dot{
+      width:8px; height:8px; border-radius:999px;
+      background: linear-gradient(90deg, var(--brand), var(--brand2));
+      box-shadow: 0 0 18px rgba(94,231,255,.35);
+    }
+
+    /* NAV */
+    .nav{
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(7,10,20,.55);
+      backdrop-filter: blur(14px);
+      border-bottom:1px solid var(--stroke);
+    }
+    .nav-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 0;
+      gap:18px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      font-weight:800; letter-spacing:.2px;
+    }
+    .logo{
+      width:34px; height:34px; border-radius:12px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 45%),
+        linear-gradient(135deg, rgba(94,231,255,.85), rgba(139,92,255,.85));
+      box-shadow: 0 10px 30px rgba(94,231,255,.15);
+      border:1px solid rgba(255,255,255,.18);
+    }
+    .nav-links{display:flex; gap:16px; align-items:center; color:var(--muted); font-weight:600;}
+    .nav-links a{padding:8px 10px; border-radius:12px; transition:.15s}
+    .nav-links a:hover{background:rgba(255,255,255,.06); color:var(--text)}
+    .nav-cta{display:flex; gap:10px; align-items:center;}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      font-weight:800;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      cursor:pointer;
+      user-select:none;
+    }
+    .btn:hover{transform: translateY(-1px); background:rgba(255,255,255,.07); border-color:rgba(255,255,255,.18)}
+    .btn.primary{
+      border-color: transparent;
+      background: linear-gradient(135deg, rgba(94,231,255,.95), rgba(139,92,255,.95));
+      color:#060816;
+      box-shadow: 0 18px 45px rgba(94,231,255,.18);
+    }
+    .btn.primary:hover{transform: translateY(-1px) scale(1.01)}
+    .btn.small{padding:10px 12px; border-radius:12px; font-weight:800}
+
+    /* HERO */
+    .hero{padding:64px 0 24px;}
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.12fr .88fr;
+      gap:28px;
+      align-items:center;
+    }
+    .h1{
+      font-size: clamp(40px, 4.2vw, 64px);
+      line-height: 1.02;
+      margin:14px 0 12px;
+      letter-spacing:-.8px;
+    }
+    .sub{
+      color:var(--muted);
+      font-size: clamp(16px, 1.25vw, 18px);
+      line-height: 1.55;
+      max-width: 56ch;
+    }
+    .hero-actions{display:flex; gap:12px; align-items:center; margin-top:22px; flex-wrap:wrap;}
+    .badges{display:flex; gap:12px; align-items:center; margin-top:18px; flex-wrap:wrap;}
+    .badge{
+      display:flex; align-items:center; gap:12px;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      min-width: 190px;
+    }
+    .badge .mini{
+      width:34px; height:34px; border-radius:10px;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.14);
+    }
+    .badge .t1{font-size:12px; color:var(--muted)}
+    .badge .t2{font-size:15px; font-weight:900}
+
+    .hero-card{
+      border:1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+      min-height: 520px;
+    }
+    .hero-card::before{
+      content:"";
+      position:absolute; inset:-120px -120px auto auto;
+      width:320px; height:320px;
+      background: radial-gradient(circle at 30% 30%, rgba(94,231,255,.35), transparent 60%);
+      filter: blur(2px);
+      transform: rotate(18deg);
+    }
+    .hero-card::after{
+      content:"";
+      position:absolute; inset:auto auto -140px -140px;
+      width:340px; height:340px;
+      background: radial-gradient(circle at 30% 30%, rgba(139,92,255,.30), transparent 60%);
+      transform: rotate(-10deg);
+    }
+    .phone{
+      position:absolute; inset: 22px 22px 22px 22px;
+      display:grid; grid-template-rows: auto 1fr auto;
+      gap:16px;
+    }
+    .screen{
+      border:1px solid rgba(255,255,255,.14);
+      background: radial-gradient(600px 380px at 50% 25%, rgba(94,231,255,.12), transparent 55%),
+                  radial-gradient(420px 300px at 20% 55%, rgba(255,216,77,.10), transparent 60%),
+                  linear-gradient(180deg, rgba(14,18,40,.96), rgba(9,11,24,.96));
+      border-radius: 22px;
+      overflow:hidden;
+      position:relative;
+      padding:16px;
+    }
+    .mock-top{
+      display:flex; justify-content:space-between; align-items:center;
+      color: rgba(255,255,255,.75);
+      font-weight:700;
+      font-size:12px;
+      margin-bottom:10px;
+    }
+    .mock-score{
+      display:flex; justify-content:space-between; align-items:center;
+      gap:10px; margin-top:6px; color:rgba(255,255,255,.9);
+      font-weight:900;
+    }
+    .hud{
+      display:flex; gap:10px; align-items:center; justify-content:space-between;
+      font-size:13px; color: var(--muted);
+    }
+    .chip{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      padding:7px 10px;
+      border-radius: 999px;
+      display:inline-flex; align-items:center; gap:8px;
+    }
+    .miniDot{width:7px;height:7px;border-radius:999px;background:var(--brand); box-shadow:0 0 14px rgba(94,231,255,.35)}
+    .court{
+      position:absolute; inset:auto 0 0 0;
+      height: 62%;
+      background:
+        radial-gradient(500px 200px at 50% 0%, rgba(255,255,255,.08), transparent 65%),
+        linear-gradient(180deg, rgba(255,255,255,.00), rgba(0,0,0,.15));
+      border-top:1px solid rgba(255,255,255,.10);
+      padding:18px 14px;
+    }
+    .aim{
+      position:absolute; top:48%; left:50%;
+      width: 190px; height: 190px;
+      transform: translate(-50%,-50%);
+      border-radius: 999px;
+      border: 2px solid rgba(94,231,255,.28);
+      box-shadow: 0 0 40px rgba(94,231,255,.10);
+    }
+    .aim::before{
+      content:"";
+      position:absolute; inset: 10px;
+      border-radius:999px;
+      border: 2px dashed rgba(255,255,255,.12);
+    }
+    .line{
+      position:absolute; top:50%; left:50%;
+      width: 250px; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(94,231,255,.95), transparent);
+      transform-origin: left center;
+      animation: sway 2.2s ease-in-out infinite;
+      filter: drop-shadow(0 0 12px rgba(94,231,255,.25));
+    }
+    @keyframes sway{
+      0%{transform: translate(0,-50%) rotate(-8deg)}
+      50%{transform: translate(0,-50%) rotate(8deg)}
+      100%{transform: translate(0,-50%) rotate(-8deg)}
+    }
+    .ball{
+      position:absolute; bottom: 58px; left:50%;
+      width: 64px; height:64px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,.45), transparent 40%),
+        radial-gradient(circle at 70% 75%, rgba(0,0,0,.25), transparent 55%),
+        linear-gradient(135deg, #ffb000, #ff6a00);
+      box-shadow: 0 18px 38px rgba(0,0,0,.45);
+      border: 1px solid rgba(255,255,255,.18);
+    }
+    .ball::before,.ball::after{
+      content:"";
+      position:absolute; inset:10px;
+      border-radius:999px;
+      border: 2px solid rgba(15,18,30,.45);
+      opacity:.75;
+      clip-path: polygon(0 48%, 100% 48%, 100% 54%, 0 54%);
+    }
+    .ball::after{
+      inset:12px;
+      clip-path: polygon(48% 0, 54% 0, 54% 100%, 48% 100%);
+    }
+    .cta-strip{
+      display:flex; justify-content:space-between; align-items:center;
+      padding:14px;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      margin-top: 14px;
+      gap:12px;
+    }
+    .cta-strip .left{display:flex; flex-direction:column; gap:4px}
+    .cta-strip .k{font-weight:900}
+    .cta-strip .m{color:var(--muted); font-size:13px}
+
+    /* SECTIONS */
+    section{padding:56px 0}
+    .section-title{
+      font-size: 28px;
+      letter-spacing:-.4px;
+      margin: 0 0 10px;
+    }
+    .section-sub{
+      margin:0 0 22px;
+      color:var(--muted);
+      line-height:1.6;
+      max-width: 70ch;
+    }
+
+    .grid-3{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:16px;
+    }
+    .card{
+      border:1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border-radius: var(--radius);
+      padding:18px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+      position:relative;
+      overflow:hidden;
+    }
+    .card h3{margin:0 0 8px; font-size:16px}
+    .card p{margin:0; color:var(--muted); line-height:1.55}
+    .icon{
+      width:42px; height:42px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      display:grid; place-items:center;
+      margin-bottom: 12px;
+    }
+    .icon svg{opacity:.9}
+    .tagline{
+      display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; color:var(--muted2);
+      font-weight:700; font-size:13px;
+    }
+    .tag{
+      padding:7px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+    }
+
+    /* Screenshots */
+    .shots{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:16px;
+    }
+    .shot-big{
+      border-radius: var(--radius2);
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      padding: 18px;
+      min-height: 360px;
+      position:relative;
+      overflow:hidden;
+    }
+    .shot-big .ph{
+      height: 320px;
+      border-radius: 18px;
+      border:1px dashed rgba(255,255,255,.16);
+      display:grid; place-items:center;
+      color: var(--muted);
+      background:
+        radial-gradient(800px 260px at 50% 30%, rgba(94,231,255,.10), transparent 55%),
+        radial-gradient(520px 240px at 25% 70%, rgba(139,92,255,.10), transparent 55%);
+    }
+    .shot-col{
+      display:grid; gap:16px;
+    }
+    .shot-small{
+      border-radius: var(--radius2);
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      padding: 16px;
+      min-height: 172px;
+      overflow:hidden;
+    }
+    .shot-small .ph{
+      height: 140px;
+      border-radius: 16px;
+      border:1px dashed rgba(255,255,255,.16);
+      display:grid; place-items:center;
+      color: var(--muted);
+      background:
+        radial-gradient(560px 220px at 30% 30%, rgba(255,216,77,.10), transparent 55%),
+        radial-gradient(560px 220px at 70% 70%, rgba(94,231,255,.10), transparent 55%);
+    }
+
+    /* Reviews */
+    .reviews{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:16px;
+    }
+    .stars{color:#ffd84d; letter-spacing:2px; font-weight:900}
+    .reviewer{margin-top:10px; color:var(--muted2); font-weight:800; font-size:13px}
+
+    /* FAQ */
+    .faq{display:grid; gap:12px;}
+    details{
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      border-radius: 16px;
+      padding: 14px 16px;
+    }
+    summary{
+      cursor:pointer;
+      font-weight:900;
+      list-style:none;
+      display:flex; justify-content:space-between; gap:14px; align-items:center;
+    }
+    summary::-webkit-details-marker{display:none}
+    details p{margin:10px 0 0; color:var(--muted); line-height:1.6}
+    .chev{transition:.15s; opacity:.8}
+    details[open] .chev{transform: rotate(180deg)}
+
+    /* Footer */
+    footer{
+      padding: 30px 0 44px;
+      border-top:1px solid var(--stroke);
+      background: rgba(0,0,0,.12);
+    }
+    .foot{
+      display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;
+      color: var(--muted);
+      font-weight:600;
+    }
+    .foot a{color: var(--muted); padding:8px 0}
+    .foot a:hover{color: var(--text)}
+    .tiny{font-size:12px; color: var(--muted2); margin-top:10px}
+
+    /* Responsive */
+    @media (max-width: 920px){
+      .hero-grid{grid-template-columns: 1fr; }
+      .hero-card{min-height: 520px}
+      .grid-3{grid-template-columns: 1fr;}
+      .shots{grid-template-columns:1fr;}
+      .reviews{grid-template-columns:1fr;}
+      .nav-links{display:none;}
+    }
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#top">
+        <div class="logo"></div>
+        <div>Basketball Pro</div>
+      </a>
+
+      <nav class="nav-links" aria-label="Hauptnavigation">
+        <a href="#features">Features</a>
+        <a href="#screens">Screens</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <div class="nav-cta">
+        <a class="btn small" href="https://play.google.com/store/apps/details?id=dev.flondy.Basketball">Download</a>
+        <a class="btn small primary" href="https://play.google.com/store/apps/details?id=dev.flondy.Basketball">Jetzt spielen</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <main id="top" class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="pill"><span class="dot"></span> One-Tap Arcade Basketball • Skill basiert • Highscore</span>
+        <h1 class="h1">Perfect Timing.<br/>Pure Swish.</h1>
+        <p class="sub">
+          <strong>Basketball Pro</strong> ist dein schneller Skill-Test: Ziel pendelt, Linie schwingt,
+          du tippst im richtigen Moment – und versenkst den Wurf. Einfach zu lernen, schwer zu meistern.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn primary" href="https://play.google.com/store/apps/details?id=dev.flondy.Basketball">Download</a>
+          <a class="btn" href="#features">So funktioniert’s</a>
+        </div>
+
+        <div class="badges" id="download">
+          <!-- Ersetze später die Links zu deinem Store -->
+          <a class="badge" href="#" aria-label="Download im App Store">
+            <div class="mini"></div>
+            <div>
+              <div class="t1">Download on the</div>
+              <div class="t2">App Store</div>
+            </div>
+          </a>
+          <a class="badge" href="https://play.google.com/store/apps/details?id=dev.flondy.Basketball" aria-label="Download bei Google Play">
+            <div class="mini"></div>
+            <div>
+              <div class="t1">Get it on</div>
+              <div class="t2">Google Play</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="tagline">
+          <span class="tag">⚡ Schnell & süchtig machend</span>
+          <span class="tag">🎯 Skill > Glück</span>
+          <span class="tag">🏀 Saftiges Feedback</span>
+          <span class="tag">🧠 Fokus-Modus</span>
+        </div>
+      </div>
+
+      <!-- Mock -->
+      <div class="hero-card" aria-label="App Vorschau">
+        <div class="phone">
+          <div class="mock-top">
+            <span>Basketball Pro</span>
+            <span style="opacity:.8;">●●●</span>
+          </div>
+
+          <div class="screen">
+            <div class="hud">
+              <span class="chip"><span class="miniDot"></span> Aim Line</span>
+              <span class="chip">Misses 0/3</span>
+            </div>
+            <div class="mock-score">
+              <div style="font-size:14px; color:var(--muted)">Score</div>
+              <div style="font-size:18px;">12</div>
+            </div>
+
+            <div class="aim"></div>
+            <div class="line"></div>
+            <div class="ball"></div>
+
+            <div class="court">
+              <div style="display:flex; justify-content:space-between; gap:10px; align-items:center;">
+                <div>
+                  <div style="font-weight:900; font-size:14px;">Tap to shoot</div>
+                  <div style="color:var(--muted); font-size:12px; margin-top:2px;">Treffe den Moment für Perfect</div>
+                </div>
+                <button class="btn primary small" type="button" onclick="document.querySelector('#features').scrollIntoView({behavior:'smooth'})">
+                  Start
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="cta-strip">
+            <div class="left">
+              <div class="k">Jede Runde zählt.</div>
+              <div class="m">3 Fehlwürfe → Game Over. Bleib eiskalt.</div>
+            </div>
+            <a class="btn small" href="https://play.google.com/store/apps/details?id=dev.flondy.Basketball">Play now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="container">
+      <h2 class="section-title">Warum Basketball Pro so gut klickt</h2>
+      <p class="section-sub">
+        Einfache Regeln, maximaler Skill-Kick: Timing, Zielhilfe, sauberes Treffer-Feedback und schnelle Runden.
+      </p>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2v20M2 12h20" stroke="white" stroke-opacity=".9" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3>One-Tap Gameplay</h3>
+          <p>Tippe im richtigen Moment – mehr brauchst du nicht. Perfekt für schnelle Sessions.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M3 12c4-8 14-8 18 0-4 8-14 8-18 0Z" stroke="white" stroke-opacity=".9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" stroke="white" stroke-opacity=".9" stroke-width="2"/>
+            </svg>
+          </div>
+          <h3>Dynamische Wurflinie</h3>
+          <p>Die Linie schwingt links/rechts. Du musst lesen, reagieren und treffen – nicht hoffen.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3 3-7Z" stroke="white" stroke-opacity=".9" stroke-width="2" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3>Saftiges Feedback</h3>
+          <p>Perfekt/Good/Miss – mit Farben, Sounds und einem satisfying Swish beim Treffer.</p>
+        </div>
+      </div>
+
+      <div class="grid-3" style="margin-top:16px;">
+        <div class="card">
+          <div class="icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M4 7h16M7 4v16M17 4v16" stroke="white" stroke-opacity=".9" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3>Ball-Skins auswählen</h3>
+          <p>Wähle deinen Style im Menü – der ausgewählte Ball wird im Game verwendet.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M12 6v6l4 2" stroke="white" stroke-opacity=".9" stroke-width="2" stroke-linecap="round"/>
+              <path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" stroke="white" stroke-opacity=".9" stroke-width="2"/>
+            </svg>
+          </div>
+          <h3>Kurze Runden</h3>
+          <p>Direkt drin, direkt wieder. Ideal fürs „noch eine Runde…“-Gefühl.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2l8 4v12l-8 4-8-4V6l8-4Z" stroke="white" stroke-opacity=".9" stroke-width="2" stroke-linejoin="round"/>
+              <path d="M12 22V12" stroke="white" stroke-opacity=".9" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3>Premium Look</h3>
+          <p>Clean UI, starke Kontraste, moderne Animationen – sofort „App-Store-ready“.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREENSHOTS -->
+  <section id="screens">
+    <div class="container">
+      <h2 class="section-title">Screenshots & Vorschau</h2>
+      <p class="section-sub">Ersetze die Platzhalter mit deinen echten Screens (PNG/JPG). Das Layout ist schon Premium.</p>
+
+      <div class="shots">
+        <div class="shot-big">
+          <div style="display:flex; justify-content:space-between; gap:14px; align-items:flex-start; margin-bottom:12px;">
+            <div>
+              <div style="font-weight:900; font-size:16px;">Gameplay Preview</div>
+              <div style="color:var(--muted); font-size:13px; margin-top:2px;">Wurflinie, Meter, Treffer-Feedback</div>
+            </div>
+            <span class="pill"><span class="dot"></span> 60 FPS • Smooth</span>
+          </div>
+          <div class="ph">📸 Screenshot 1 (z.B. Gameplay)</div>
+        </div>
+
+        <div class="shot-col">
+          <div class="shot-small">
+            <div style="font-weight:900; font-size:14px; margin-bottom:10px;">Ball Selection</div>
+            <div class="ph">📸 Screenshot 2 (Menü)</div>
+          </div>
+          <div class="shot-small">
+            <div style="font-weight:900; font-size:14px; margin-bottom:10px;">Game Over / Score</div>
+            <div class="ph">📸 Screenshot 3 (Score)</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:18px; display:flex; gap:12px; flex-wrap:wrap;">
+        <a class="btn" href="#download">App Store</a>
+        <a class="btn" href="https://play.google.com/store/apps/details?id=dev.flondy.Basketball">Google Play</a>
+        <a class="btn primary" href="https://play.google.com/store/apps/details?id=dev.flondy.Basketball">Jetzt downloaden</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section id="reviews">
+    <div class="container">
+      <h2 class="section-title">Spieler sagen</h2>
+      <p class="section-sub">Hier kannst du später echte Reviews reinpacken. Für den Start: Premium Platzhalter.</p>
+
+      <div class="reviews">
+        <div class="card">
+          <div class="stars">★★★★★</div>
+          <p style="margin-top:10px; color:var(--muted); line-height:1.6;">
+            „Einfach zu verstehen, aber mega satisfying wenn du den Perfect-Timing-Swish triffst.“
+          </p>
+          <div class="reviewer">— Highscore Hunter</div>
+        </div>
+        <div class="card">
+          <div class="stars">★★★★★</div>
+          <p style="margin-top:10px; color:var(--muted); line-height:1.6;">
+            „Die Wurflinie macht’s fair und skillbasiert. Kein Random-Glück. Genau mein Ding.“
+          </p>
+          <div class="reviewer">— Arcade Fan</div>
+        </div>
+        <div class="card">
+          <div class="stars">★★★★★</div>
+          <p style="margin-top:10px; color:var(--muted); line-height:1.6;">
+            „Kurze Runden, direkt wieder drin. Perfekt für unterwegs.“
+          </p>
+          <div class="reviewer">— Casual Pro</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="container">
+      <h2 class="section-title">FAQ</h2>
+      <p class="section-sub">Kurz & klar. Genau wie das Gameplay.</p>
+
+      <div class="faq">
+        <details>
+          <summary>
+            Wie funktioniert das Timing?
+            <span class="chev">▾</span>
+          </summary>
+          <p>Du wartest den richtigen Moment ab und tippst. Je näher du am perfekten Timing bist, desto sauberer der Wurf.</p>
+        </details>
+
+        <details>
+          <summary>
+            Warum bewegt sich die Wurflinie?
+            <span class="chev">▾</span>
+          </summary>
+          <p>Damit nicht jeder Wurf automatisch sitzt. Du musst den Schwung lesen und deine Linie kontrollieren.</p>
+        </details>
+
+        <details>
+          <summary>
+            Kann ich mehrere Bälle auswählen?
+            <span class="chev">▾</span>
+          </summary>
+          <p>Ja. Im Menü wählst du deinen Ball-Skin aus – genau dieser wird im Spiel verwendet.</p>
+        </details>
+
+        <details>
+          <summary>
+            Kommen neue Features?
+            <span class="chev">▾</span>
+          </summary>
+          <p>Ja: neue Skins, mehr Modi, Herausforderungen und noch mehr „juice“ (VFX/SFX/UI).</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section>
+    <div class="container">
+      <div class="card" style="padding:22px; border-radius: var(--radius2);">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap;">
+          <div>
+            <div style="font-size:22px; font-weight:1000; letter-spacing:-.4px;">Bereit für den perfekten Wurf?</div>
+            <div style="color:var(--muted); margin-top:6px; line-height:1.6;">
+              Download Basketball Pro und jag deinen neuen Highscore.
+            </div>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn" href="https://play.google.com/store/apps/details?id=dev.flondy.Basketball">Store Links</a>
+            <a class="btn primary" href="https://play.google.com/store/apps/details?id=dev.flondy.Basketball">Jetzt downloaden</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="foot">
+        <div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div class="logo" style="width:28px;height:28px;border-radius:10px"></div>
+            <div style="font-weight:900; color:var(--text)">Basketball Pro</div>
+          </div>
+          <div class="tiny">© <span id="year"></span> Basketball Pro. Alle Rechte vorbehalten.</div>
+        </div>
+
+        <div style="display:flex; gap:16px; flex-wrap:wrap;">
+          <a href="#" onclick="alert('Hier Link zur Datenschutzseite einfügen.'); return false;">Datenschutz</a>
+          <a href="#" onclick="alert('Hier Link zu AGB/Impressum einfügen.'); return false;">Impressum</a>
+          <a href="https://play.google.com/store/apps/details?id=dev.flondy.Basketball">Download</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Jahr
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Smooth scroll for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener("click",(e)=>{
+        const id = a.getAttribute("href");
+        if (!id || id === "#") return;
+        const el = document.querySelector(id);
+        if (!el) return;
+        e.preventDefault();
+        el.scrollIntoView({behavior:"smooth"});
+      });
+    });
+  </script>
+</body>
+</html>
